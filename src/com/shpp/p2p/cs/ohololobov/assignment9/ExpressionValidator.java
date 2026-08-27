@@ -4,10 +4,20 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+/**
+ * This class ontains logic of validation of linear representation of mathematical expression
+ * and linear representation of variable equality
+ */
 public class ExpressionValidator {
-
-    public static boolean isValidExpression(String expression) {
-
+    /**
+     * The method checks whether expression is valid mathematical expression
+     *
+     * @param expression input expression
+     * @return true if validation was successful
+     * @throws IllegalArgumentException when validation fails
+     */
+    public static boolean isValidExpression(String expression) throws IllegalArgumentException{
+        containsValidLetterComponents(expression);
         isValidNumberOfBrackets(expression);
 
         for (ValidationRegEx validationRegEx : ValidationRegEx.values()) {
@@ -17,7 +27,14 @@ public class ExpressionValidator {
         return true;
     }
 
-    static boolean validate(String expression, ValidationRegEx validationRegEx) {
+    /**
+     * The method contains logic of validation with regular expression from ENUM ValidationRegEx
+     * @param expression input expression for validation
+     * @param validationRegEx instanse of ENUM ValidationRegEx
+     * @return true if validation is successful
+     * @throws IllegalArgumentException when validation fails
+     */
+    static boolean validate(String expression, ValidationRegEx validationRegEx) throws IllegalArgumentException{
         String patternRegEx = validationRegEx.pattern();
         String exceptionMSG = validationRegEx.exceptionMSG();
         boolean isPositiveExpectation = validationRegEx.isPositiveExpectation();
@@ -25,20 +42,20 @@ public class ExpressionValidator {
         if (Pattern.compile(patternRegEx).matcher(expression).find()) {
             System.out.println("ExpressionValidator 78 Pattern: " + patternRegEx);
             isPositiveExpectation = !isPositiveExpectation;
-            if(expression.equals("a")){
-                System.out.println("expression.equals(\"a\")");
-            }
         }
         if (isPositiveExpectation) {
-            if(expression.equals("a")){
-                System.out.println("expression.equals(\"a\") exception");
-            }
             throw new IllegalArgumentException(exceptionMSG);
         }
         return true;
     }
 
-    static boolean isValidNumberOfBrackets(String expression) {
+    /**
+     * The method checks number and position of brackets according to postfix notatio of mathematical expression
+     * @param expression input expression for validation
+     * @return true if validation is successful
+     * @throws IllegalArgumentException when validation fails
+     */
+    static boolean isValidNumberOfBrackets(String expression) throws IllegalArgumentException{
         int openingBracketCounter = 0;
         int closingBracketCounter = 0;
         for (int i = 0; i < expression.length(); i++) {
@@ -57,14 +74,22 @@ public class ExpressionValidator {
         return true;
     }
 
-
-    static boolean containsValidLetterComponents(String expression) {
-        Map<String, MathFunction> mathFunctionHashMap = MathFunction.mathFunctionAsHashMap();
+    /**
+     * The method checks letter elements of mathematical expression.
+     * Expression must contain only solitary letters as variables
+     * or group of letters corresponding to math function
+     *
+     * @param expression input expression for validation
+     * @return true if validation is successful
+     * @throws IllegalArgumentException when validation fails
+     */
+    static boolean containsValidLetterComponents(String expression) throws IllegalArgumentException {
+        Map<String, OneArgumentFunction> mathFunctionHashMap = OneArgumentFunction.mathFunctionAsHashMap();
         System.out.println("ExpressionValidator expression 109: " + expression);
-        String[] letterComponent = expression.split("[^" + ValidationRegEx.getLetterRegEx() + "]");
+        String[] letterComponent = expression.split("[^" + ValidationRegEx.letterRegEx() + "]");
         System.out.println("ExpressionValidator 111 Arrays.toString(letterComponent+ " + Arrays.toString(letterComponent));
         for (String s : letterComponent) {
-            if(s.isEmpty()){
+            if (s.isEmpty()) {
                 continue;
             }
             System.out.println("ExpressionValidator 113 component: " + s);
@@ -74,20 +99,5 @@ public class ExpressionValidator {
             }
         }
         return true;
-    }
-
-
-    public static boolean isEmpty(String arg, boolean isExpression) {
-        boolean isEmpty = false;
-        if (isExpression) {
-            if (arg.isEmpty()) {
-                throw new IllegalArgumentException("There is empty expression");
-            }
-        } else {
-            if (arg.isEmpty()) {
-                isEmpty = true;
-            }
-        }
-        return isEmpty;
     }
 }
