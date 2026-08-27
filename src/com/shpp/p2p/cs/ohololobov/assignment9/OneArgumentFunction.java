@@ -1,9 +1,8 @@
 package com.shpp.p2p.cs.ohololobov.assignment9;
 
 import java.util.HashMap;
-import java.util.function.UnaryOperator;
 
-public enum MathFunction {
+public enum OneArgumentFunction{
     SIN("sin", Math::sin),
     COS("cos", Math::cos),
     TAN("tan", Math::tan),
@@ -15,9 +14,9 @@ public enum MathFunction {
 
     private final String value;
     private final FunctionCalculatingInterface functionCalculatingInterface;
-    private static HashMap<String, MathFunction> mathFunctionHashMap;
+    private static HashMap<String, OneArgumentFunction> mathFunctionHashMap;
 
-    MathFunction(String value, FunctionCalculatingInterface functionCalculatingInterface) {
+    OneArgumentFunction(String value, FunctionCalculatingInterface functionCalculatingInterface) {
         this.value = value;
         this.functionCalculatingInterface = functionCalculatingInterface;
     }
@@ -25,11 +24,11 @@ public enum MathFunction {
     public static String mathFunctionsToStringWithOrSeparatorRegEx() {
         StringBuilder sb = new StringBuilder("(");
         int counter = 0;
-        for (MathFunction mathFunction : MathFunction.values()) {
-            if (counter++ == MathFunction.values().length - 1) {
-                sb.append(mathFunction.value).append(")");
+        for (OneArgumentFunction oneArgumentFunction : OneArgumentFunction.values()) {
+            if (counter++ == OneArgumentFunction.values().length - 1) {
+                sb.append(oneArgumentFunction.value).append(")");
             } else {
-                sb.append(mathFunction.value).append("|");
+                sb.append(oneArgumentFunction.value).append("|");
             }
         }
         return sb.toString();
@@ -40,7 +39,7 @@ public enum MathFunction {
     }
 
     double calculateFunction(String functionValue, double arg) throws IllegalArgumentException {
-        MathFunction function = switch (functionValue){
+        OneArgumentFunction function = switch (functionValue){
             case "sin" -> mathFunctionHashMap.get("sin");
             case "cos" -> mathFunctionHashMap.get("cos");
             case "tan" -> mathFunctionHashMap.get("tan");
@@ -59,11 +58,11 @@ public enum MathFunction {
         return function.functionCalculatingInterface.calculate(arg);
     }
 
-    public static HashMap<String, MathFunction> mathFunctionAsHashMap() {
+    public static HashMap<String, OneArgumentFunction> mathFunctionAsHashMap() {
         if (mathFunctionHashMap == null) {
             mathFunctionHashMap = new HashMap<>();
-            for (MathFunction mathFunction : MathFunction.values()) {
-                mathFunctionHashMap.put(mathFunction.getValue(), mathFunction);
+            for (OneArgumentFunction oneArgumentFunction : OneArgumentFunction.values()) {
+                mathFunctionHashMap.put(oneArgumentFunction.getValue(), oneArgumentFunction);
             }
         }
         return mathFunctionHashMap;
