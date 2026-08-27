@@ -185,7 +185,7 @@ public abstract class MathExpressionParser implements Parser {
     }
 
     /**
-     * Method check if token operand ist, comparing with value of non operand tokens
+     * Method checks if token operand ist, comparing with value of non operand tokens
      *
      * @param token token from list of tokens in postfix notation order
      * @return boolean true if token corresponds to operand
