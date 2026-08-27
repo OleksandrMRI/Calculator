@@ -1,5 +1,8 @@
 package com.shpp.p2p.cs.ohololobov.assignment9;
 
+/**
+ * ENUM of regular expression to validating input lineal representations of mathematical expression and variable equalities
+ */
 public enum ValidationRegEx {
     VALID_STRUCTURES_REG_EX(RegEx.VALID_STRUCTURES_REG_EX, "Illegal component is present", true),
     VALID_BEGINNING_REG_EX(RegEx.VALID_BEGINNING_OF_EXPRESSION_REG_EX, "Illegal structure at start of expression", true),
@@ -14,31 +17,52 @@ public enum ValidationRegEx {
     private final String exceptionMSG;
     private final boolean isPositiveExpectation;
 
+    /**
+     * Constructor of class ValidationRegEx
+     * @param pattern string regular expression for check up
+     * @param exceptionMSG message of exception if input string do not valid
+     * @param isPositiveExpectation expected boolean value of matching regular expression
+     */
     ValidationRegEx(String pattern, String exceptionMSG, boolean isPositiveExpectation) {
         this.pattern = pattern;
         this.exceptionMSG = exceptionMSG;
         this.isPositiveExpectation = isPositiveExpectation;
     }
 
+    /**
+     * getting regular expression for check up as string
+     * @return regular expression
+     */
     public String pattern() {
         return pattern;
     }
 
+    /**
+     * getting exception message if validation fails
+     * @return exception message
+     */
     public String exceptionMSG() {
         return exceptionMSG;
     }
 
+    /**
+     * getting expected boolean value of matching regular expression
+     * @return expected boolean value of matching
+     */
     public boolean isPositiveExpectation() {
         return isPositiveExpectation;
     }
 
+    /**
+     * inner static class consists strings of regular expression
+     */
     private static class RegEx {
         private static final String DECIMAL_SEPARATOR = ".";
 
 
-        private static final String MINUS_SIGN = Operator.SUBTRACTION.getValue();
+        private static final String MINUS_SIGN = SimpleMathOperator.SUBTRACTION.getValue();
 
-        private static final String ALL_ARITHMETIC_OPERATORS = Operator.operatorsToString(true);
+        private static final String ALL_ARITHMETIC_OPERATORS = SimpleMathOperator.operatorsToString();
         private static final String LETTERS_REG_EX = "a-z";
         private static final String OPENING_BRACKET = Bracket.OPENING_BRACKET.getValue();
         private static final String CLOSING_BRACKET = Bracket.CLOSING_BRACKET.getValue();
@@ -50,15 +74,19 @@ public enum ValidationRegEx {
 
         private static final String VALID_BEGINNING_OF_EXPRESSION_REG_EX = "^(" + MINUS_SIGN + "?[" + LETTERS_REG_EX + "])|^(" + MINUS_SIGN + "?(\\d+(\\" + DECIMAL_SEPARATOR + "?\\d+)?))|^(" + MINUS_SIGN + "?[" + OPENING_BRACKET + "])";
         private static final String INVALID_END_OF_EXPRESSION_REG_EX = "([" + DECIMAL_SEPARATOR + OPENING_BRACKET + ALL_ARITHMETIC_OPERATORS + "]|[^" + LETTERS_REG_EX + "][" + LETTERS_REG_EX + "]{2})$";
-        private static final String INVALID_COMPONENT_AFTER_MATH_FUNCTION_REG_EX = MathFunction.mathFunctionsToStringWithOrSeparatorRegEx() + "[^" + OPENING_BRACKET + "]";
+        private static final String INVALID_COMPONENT_AFTER_MATH_FUNCTION_REG_EX = OneArgumentFunction.mathFunctionsToStringWithOrSeparatorRegEx() + "[^" + OPENING_BRACKET + "]";
         private static final String INVALID_BEGINNING_OF_EXPRESSION_SEQUENCES_REG_EX = "^[^0-9" + LETTERS_REG_EX + MINUS_SIGN + "]|^(" + MINUS_SIGN + "[^0-9" + LETTERS_REG_EX + "])";
         private static final String INVALID_DECIMAL_SEPARATOR_USING_REG_EX = "\\" + DECIMAL_SEPARATOR + "\\D|\\D\\" + DECIMAL_SEPARATOR + "|\\d\\" + DECIMAL_SEPARATOR + "\\D|\\D\\" + DECIMAL_SEPARATOR + "\\d";
         private static final String INVALID_COMPONENT_AFTER_OPENING_BRACKET_REG_EX = "[(][^0-9" + LETTERS_REG_EX + MINUS_SIGN + "]";
         private static final String INVALID_COMPONENT_AFTER_VARIABLE_REG_EX = "([" + LETTERS_REG_EX + "](\\d|\\" + DECIMAL_SEPARATOR + "))|["+LETTERS_REG_EX+"]{2}[^"+LETTERS_REG_EX+"]";
         private static final String INVALID_COMPONENT_AFTER_OPERATOR_REG_EX = "[" + ALL_ARITHMETIC_OPERATORS + "][\\" + DECIMAL_SEPARATOR + "|" + CLOSING_BRACKET + "|" + ALL_ARITHMETIC_OPERATORS + "]";
     }
-    public static String getLetterRegEx(){
+
+    /**
+     * getter for regular expression
+     * @return regular expression - range of letter in lowercase
+     */
+    public static String letterRegEx(){
         return RegEx.LETTERS_REG_EX;
     }
-
 }
