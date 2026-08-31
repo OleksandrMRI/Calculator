@@ -56,20 +56,27 @@ public class Assignment9 {
             System.exit(0);
         }
         ConsoleCalculator reversPolishNotationConsoleCalculator = new ReversPolishNotationConsoleCalculator();
-        int size;
-        int counter;
-        do {
+        if(args.length>1) {
+            int size;
+            int counter;
+            do {
 //            List<String> tokensExpressionListCopy= new ArrayList<>(tokensExpressionList);
+                result = reversPolishNotationConsoleCalculator.calculate(tokensExpressionList, variablesMap);
+                addToResultsList(reversPolishNotationConsoleCalculator.getResultList());
+                System.err.println("Result:  " + result);
+                Thread.sleep(1000);
+
+                System.out.println("counter: " + (counter = reversPolishNotationConsoleCalculator.getVariablesCount()));
+                System.out.println("size: " + (size = reversPolishNotationConsoleCalculator.numberOfMainVariableValues(variablesMap)));
+
+            }
+            while (counter < size);
+            for (List<Double> result : results) {
+                System.out.println(result);
+            }
+        }else{
             result = reversPolishNotationConsoleCalculator.calculate(tokensExpressionList, variablesMap);
-            addToResultsList(reversPolishNotationConsoleCalculator.getResultList());
-            System.err.println("Result:  " + result);
-            Thread.sleep(1000);
-            System.out.println("counter: "+ (counter= reversPolishNotationConsoleCalculator.getVariablesCount()));
-            System.out.println("size: "+ (size= reversPolishNotationConsoleCalculator.numberOfMainVariableValues(variablesMap)));
-        }
-        while (counter < size);
-        for (List<Double> result: results){
-            System.out.println(result);
+            System.out.println("Result:  " + result);
         }
     }
     public static double getResult(){
@@ -112,8 +119,6 @@ public class Assignment9 {
      */
     static Map<String, List<List<String>>> parseVariablesToMap(String[] args) {
         Map<String, List<List<String>>> parsedVariables = new HashMap<>();
-        List<String> tokenVariableValue = new ArrayList<>();
-        List<List<String>> parsedVariablesValues;
         String formatedVariableString;
         for (int i = 1; i < args.length; i++) {
             formatedVariableString = REVERSE_POLISH_NOTATION_PARSER.formatRawString(args[i]);

@@ -1,7 +1,6 @@
 package com.shpp.p2p.cs.ohololobov.assignment9;
 
 import java.util.List;
-import java.util.Map;
 
 public abstract class GraphCalculator {
     abstract double calculate(List<String> tokens, double variableValues);

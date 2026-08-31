@@ -42,8 +42,7 @@ public class XYAxes extends GCompound {
      * @return GLine, vertical line at the middle of canvas
      */
     public GLine createVerticalMiddleLine() {
-        GLine verticalMiddleLine = createGLine(getWidth / 2.0, 0, getWidth / 2.0, getHeight);
-        return verticalMiddleLine;
+        return createGLine(getWidth / 2.0, 0, getWidth / 2.0, getHeight);
     }
 
     /**
@@ -52,8 +51,7 @@ public class XYAxes extends GCompound {
      * @return GLine, horizontal line at the middle of canvas
      */
     public GLine createHorizontalMiddleLine() {
-        GLine horizontalMiddleLine = createGLine(0, getHeight / 2.0, getWidth, getHeight / 2.0);
-        return horizontalMiddleLine;
+        return createGLine(0, getHeight / 2.0, getWidth, getHeight / 2.0);
     }
 
     /**

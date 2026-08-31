@@ -15,7 +15,7 @@ public class GraphPolishCalculator extends GraphCalculator{
     public double calculate(List<String> tokensExpressionList,
                             double variableValue) {
         List<String> tokensExpressionListCopy= new ArrayList<>(tokensExpressionList);
-        double result = 0;
+        double result;
         if (tokensExpressionListCopy.size() == 1) {
             result = receiveOperandValue(variableValue, tokensExpressionListCopy.getFirst());
         }else {

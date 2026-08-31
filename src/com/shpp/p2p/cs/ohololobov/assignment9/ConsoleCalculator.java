@@ -9,7 +9,6 @@ public abstract class ConsoleCalculator{
     private final Map<String, Integer> variableCounter = new HashMap<>();
     private final List<String> variables = new ArrayList<>();
     private final List<Double> resultList = new ArrayList<>();
-    private final double[] resultArray = new double[2];
 
     abstract double calculate(List<String> expressionTokens,
                               Map<String, List<List<String>>> variableValueTokens);
@@ -53,7 +52,7 @@ public abstract class ConsoleCalculator{
                 System.out.println();
                 String nextOperand;
 
-                if (size > (indexOfNextOperand)
+                if (size > indexOfNextOperand
                         && variableCounter.get(nextOperand = variables.get(indexOfNextOperand)) >= parsedVariables.get(nextOperand).size()) {
 
                     variableCounter.put(operand, ++currentCount);
