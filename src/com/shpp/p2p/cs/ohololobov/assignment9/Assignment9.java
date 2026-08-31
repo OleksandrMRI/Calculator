@@ -1,5 +1,6 @@
 package com.shpp.p2p.cs.ohololobov.assignment9;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,12 +8,14 @@ import java.util.Map;
 /**
  * This class contains logic of calculator.
  * Receives arguments throw String[] args of main method,
- * in form of expression and equalities of variables.
+ * in form of expression and equalities of variables, f.e. {"2+3/c","c=1"}
  * If expression contains variable, value of variable must be used
  * to calculate expression, else numeric expression must be calculated.
- * This calculator must operate simple binary operator /+-*^.
+ * This program execute expression with simple binary operation /+-*^
+ * and use as base for parsing reverse Polish notation.
  */
 public class Assignment9 {
+    private final static List<List<Double>> results = new ArrayList<>();
     /**
      * Constant to use parsing in many methods of class Parser
      */
@@ -28,6 +31,9 @@ public class Assignment9 {
      * and result of parsing right part of equality to List preparing to calculation.
      */
     private static final HashMap<String, ParsedVariableRecord> variablesDataBase = new HashMap<>();
+    private static double result;
+    private static List<String> tokensExpressionList;
+    private static Map<String, List<List<String>>> variablesMap;
 
     /**
      * The method start logic of finding result if calculating expression,
@@ -40,18 +46,61 @@ public class Assignment9 {
      *
      * @param args String[] contains strings of expression and variables.
      */
-    static void main(String[] args) {
-        Map<String, List<String>> variablesMap = null;
-        List<String> tokensExpressionList = null;
+    static void main(String[] args) throws InterruptedException {
+        variablesMap = null;
         if (args.length > 0) {
             tokensExpressionList = parseExpression(args[0]);
             variablesMap = parseVariablesToMap(args);
         } else {
-            System.out.println("Main function has no arguments. Please, enter arguments of main method");
+            System.out.println("Main() has no arguments. Please, enter arguments of main() method");
             System.exit(0);
         }
-        Calculator reversPolishNotationCalculator = new ReversPolishNotationCalculator();
-        System.out.println(reversPolishNotationCalculator.calculate(tokensExpressionList, variablesMap));
+        ConsoleCalculator reversPolishNotationConsoleCalculator = new ReversPolishNotationConsoleCalculator();
+        int size;
+        int counter;
+        do {
+//            List<String> tokensExpressionListCopy= new ArrayList<>(tokensExpressionList);
+            result = reversPolishNotationConsoleCalculator.calculate(tokensExpressionList, variablesMap);
+            addToResultsList(reversPolishNotationConsoleCalculator.getResultList());
+            System.err.println("Result:  " + result);
+            Thread.sleep(1000);
+            System.out.println("counter: "+ (counter= reversPolishNotationConsoleCalculator.getVariablesCount()));
+            System.out.println("size: "+ (size= reversPolishNotationConsoleCalculator.numberOfMainVariableValues(variablesMap)));
+        }
+        while (counter < size);
+        for (List<Double> result: results){
+            System.out.println(result);
+        }
+    }
+    public static double getResult(){
+        return result;
+    }
+
+    public static List<String> getExpressionTokenList(){
+        return tokensExpressionList;
+    }
+
+    public static Map<String, List<List<String>>> getVariablesMap(){
+        return variablesMap;
+    }
+
+    public static List<List<Double>> results(){
+        return results;
+    }
+
+    private static void addToResultsList(List<Double> resultList) {
+        List<Double> result = new ArrayList<>();
+        if(resultList.size()==1){
+            result.add(resultList.getFirst());
+            results.add(result);
+        } else {
+            int counter = 0;
+            for (int i = resultList.size()-1; i >=0 ; i--) {
+                result.add(resultList.get(i));
+                if(++counter>1) break;
+            }
+            results.add(result);
+        }
     }
 
     /**
@@ -61,8 +110,10 @@ public class Assignment9 {
      * @param args String[] arguments of main method
      * @return Map of parsed variable with key as variable name and value as parsed value
      */
-    private static Map<String, List<String>> parseVariablesToMap(String[] args) {
-        Map<String, List<String>> parsedVariables = new HashMap<>();
+    static Map<String, List<List<String>>> parseVariablesToMap(String[] args) {
+        Map<String, List<List<String>>> parsedVariables = new HashMap<>();
+        List<String> tokenVariableValue = new ArrayList<>();
+        List<List<String>> parsedVariablesValues;
         String formatedVariableString;
         for (int i = 1; i < args.length; i++) {
             formatedVariableString = REVERSE_POLISH_NOTATION_PARSER.formatRawString(args[i]);
@@ -72,7 +123,12 @@ public class Assignment9 {
             }
             VariableEqualityRecord variableEqualityRecord = REVERSE_POLISH_NOTATION_PARSER.getVariableEqualityRecord(formatedVariableString);
             ParsedVariableRecord parsedVariableRecord = getParsedVariableRecord(variableEqualityRecord);
-            parsedVariables.put(parsedVariableRecord.variableName(), parsedVariableRecord.parsedVariableValue());
+
+            String variableName = parsedVariableRecord.variableName();
+            if (!parsedVariables.containsKey(variableName)) {
+                parsedVariables.put(parsedVariableRecord.variableName(), new ArrayList<>());
+            }
+            parsedVariables.get(variableName).add(parsedVariableRecord.parsedVariableValue());
         }
         return parsedVariables;
     }
@@ -83,7 +139,7 @@ public class Assignment9 {
      * @param firstArg first element in String[] args of main method
      * @return List of tokens from parsing expression
      */
-    private static List<String> parseExpression(String firstArg) {
+    static List<String> parseExpression(String firstArg) {
         List<String> parsedExpression;
         String expression = getFormatedExpression(firstArg);
         parsedExpression = getParsedExpression(expression);
@@ -150,6 +206,7 @@ public class Assignment9 {
                     sourceVariableEquality,
                     parsedVariableRecord
             );
+            System.out.println("variablesDataBase: "+variablesDataBase + "variablesDataBase SIZE: " + variablesDataBase.size());
         } else {
             parsedVariableRecord = getVariableFromDataBase(sourceVariableEquality);
         }
@@ -168,7 +225,7 @@ public class Assignment9 {
     private static List<String> parsVariableExpression(VariableEqualityRecord variableEqualityRecord) {
         String variableExpression = variableEqualityRecord.variableValue();
         ExpressionValidator.isValidExpression(variableExpression);
-        List<String> reversePolishNotation =  REVERSE_POLISH_NOTATION_PARSER.pars(variableExpression);
+        List<String> reversePolishNotation = REVERSE_POLISH_NOTATION_PARSER.pars(variableExpression);
         return REVERSE_POLISH_NOTATION_PARSER.processVariableUnaryMinus(reversePolishNotation, variableEqualityRecord.unaryMinus());
     }
 

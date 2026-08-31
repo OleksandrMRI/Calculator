@@ -95,7 +95,7 @@ public class ExpressionValidator {
             System.out.println("ExpressionValidator 113 component: " + s);
             System.out.println("ExpressionValidator 114 !mathFunctionHashMap.containsKey(s.toLowerCase())" + !mathFunctionHashMap.containsKey(s.toLowerCase()));
             if (s.length() != 1 && !mathFunctionHashMap.containsKey(s.toLowerCase())) {
-                throw new IllegalArgumentException("Invalid variable value string");
+                throw new IllegalArgumentException("Invalid letters component");
             }
         }
         return true;

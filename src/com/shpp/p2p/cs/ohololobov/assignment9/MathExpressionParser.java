@@ -8,6 +8,7 @@ public abstract class MathExpressionParser implements Parser {
      * constant contains string that used as equality sign
      */
     public static final String EQUALITY = "=";
+    public static final List<String> VARIABLES = new ArrayList<>();
 
     /**
      * The method pars linear representation of expression to List of tokens in necessary notation order
@@ -214,5 +215,15 @@ public abstract class MathExpressionParser implements Parser {
      */
     protected boolean isNumber(char ch) {
         return ch >= '0' && ch <= '9';
+    }
+
+    protected List<String> getPresentedInExpressionVariables (String expression){
+        List<String> tokensInPostfixNotation = parsToListInPostfixNotation(expression);
+        for (String token: tokensInPostfixNotation){
+            if(token.length()==1&&isLetter(token.charAt(0))){
+                VARIABLES.add(token);
+            }
+        }
+        return VARIABLES;
     }
 }
